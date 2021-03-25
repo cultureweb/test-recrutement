@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import ListOfTasks from './ListOfTasks';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,15 +24,24 @@ const Tasks = () => {
     const newTask = {
       id: tasks.length,
       description: task,
+      done: false,
     };
 
     setTasks((prevState) => [...prevState, newTask]);
     setTask('');
   };
-
   return (
     <>
-      <h1>tasks</h1>
+      <h2>To do:</h2>
+      <ListOfTasks
+        tasks={tasks.filter((item) => !item.done)}
+        setTasks={setTasks}
+      />
+      <h2>Done:</h2>
+      <ListOfTasks
+        tasks={tasks.filter((item) => item.done)}
+        setTasks={setTasks}
+      />
       <form
         onSubmit={addTask}
         className={classes.root}
