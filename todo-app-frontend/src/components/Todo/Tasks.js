@@ -23,7 +23,7 @@ const Tasks = () => {
 
     const newTask = {
       id: tasks.length,
-      description: task,
+      title: task,
       done: false,
     };
 
@@ -36,11 +36,13 @@ const Tasks = () => {
       <ListOfTasks
         tasks={tasks.filter((item) => !item.done)}
         setTasks={setTasks}
+        setTask={setTask}
       />
       <h2>Done:</h2>
       <ListOfTasks
         tasks={tasks.filter((item) => item.done)}
         setTasks={setTasks}
+        setTask={setTask}
       />
       <form
         onSubmit={addTask}

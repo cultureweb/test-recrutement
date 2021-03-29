@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Snackbar,
-} from '@material-ui/core';
+import { IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Alert from '@material-ui/lab/Alert';
+import Toast from '../UI/Toast';
+import CustomModal from '../UI/CustomModal';
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,56 +15,87 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListOfTasks = ({ tasks, setTasks }) => {
+const ListOfTasks = ({ tasks, setTasks, setTask }) => {
   const classes = useStyles();
   const [checked, setChecked] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openToast, setOpenToast] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleCheck = (event, id) => {
     setChecked(event.target.checked);
     setTasks((prevState) =>
       prevState.map((obj) =>
-        obj.id === id
-          ? { id: obj.id, description: obj.description, done: !obj.done }
+        obj.id === id ? { id: obj.id, title: obj.title, done: !obj.done } : obj
+      )
+    );
+  };
+
+  const handleDelete = (id) => {
+    setTasks((prevState) => prevState.filter((item) => item.id !== id));
+    setOpenToast(true);
+  };
+
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenToast(false);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleChange = (e, title) => {
+    e.preventDefault();
+    setTasks((prevState) =>
+      prevState.map((obj) =>
+        obj.title === title
+          ? { id: obj.id, title: e.target.value, done: obj.done }
           : obj
       )
     );
   };
 
-  const handleDelete = (event, id) => {
-    setTasks((prevState) => prevState.filter((item) => item.id !== id));
-    setOpen(true);
+  const updateTask = () => {
+    setOpenModal(false);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
-  };
   return (
     <List className={classes.root}>
       {tasks.map((t, index) => (
-        <ListItem
-          key={index}
-          role={undefined}
-          dense
-          button
-          onChange={(event) => handleCheck(event, t.id)}
-        >
-          <Checkbox edge="start" checked={t.done} />
-          <ListItemText>{t.description}</ListItemText>
-          <IconButton
-            aria-label="delete"
-            onClick={(event) => handleDelete(event, t.id)}
-          >
-            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-              <Alert onClose={handleClose} severity="success">
-                This task has been removed!
-              </Alert>
-            </Snackbar>
+        <ListItem key={index} role={undefined} dense>
+          <Checkbox
+            edge="start"
+            checked={t.done}
+            onChange={(event) => handleCheck(event, t.id)}
+          />
+          <ListItemText>{t.title}</ListItemText>
+          <IconButton aria-label="delete" onClick={() => handleDelete(t.id)}>
+            <Toast
+              text="This task has been removed!"
+              handleCloseToast={handleCloseToast}
+              openToast={openToast}
+              setOpenToast={setOpenToast}
+            />
+
             <DeleteIcon />
           </IconButton>
+          <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
+            <EditIcon />
+          </IconButton>
+          <CustomModal
+            handleCloseModal={handleCloseModal}
+            openModal={openModal}
+            title={t.title}
+            handleChange={handleChange}
+            updateTask={updateTask}
+          />
         </ListItem>
       ))}
     </List>
