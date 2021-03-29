@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ListOfTasks = ({ tasks, setTasks, setTask }) => {
   const classes = useStyles();
+
   const [checked, setChecked] = useState(false);
   const [openToast, setOpenToast] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -25,7 +26,14 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
     setChecked(event.target.checked);
     setTasks((prevState) =>
       prevState.map((obj) =>
-        obj.id === id ? { id: obj.id, title: obj.title, done: !obj.done } : obj
+        obj.id === id
+          ? {
+              id: obj.id,
+              title: obj.title,
+              done: !obj.done,
+              createdAt: event.target.checked ? new Date() : null,
+            }
+          : obj
       )
     );
   };
@@ -56,7 +64,12 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
     setTasks((prevState) =>
       prevState.map((obj) =>
         obj.title === title
-          ? { id: obj.id, title: e.target.value, done: obj.done }
+          ? {
+              id: obj.id,
+              title: e.target.value,
+              done: obj.done,
+              createdAt: obj.createdAt,
+            }
           : obj
       )
     );
@@ -68,36 +81,41 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
 
   return (
     <List className={classes.root}>
-      {tasks.map((t, index) => (
-        <ListItem key={index} role={undefined} dense>
-          <Checkbox
-            edge="start"
-            checked={t.done}
-            onChange={(event) => handleCheck(event, t.id)}
-          />
-          <ListItemText>{t.title}</ListItemText>
-          <IconButton aria-label="delete" onClick={() => handleDelete(t.id)}>
-            <Toast
-              text="This task has been removed!"
-              handleCloseToast={handleCloseToast}
-              openToast={openToast}
-              setOpenToast={setOpenToast}
+      {tasks
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .map((t, index) => (
+          <ListItem key={index} role={undefined} dense>
+            <Checkbox
+              edge="start"
+              checked={t.done}
+              // checked={checked}
+              onChange={(event) => handleCheck(event, t.id)}
             />
+            <ListItemText>{t.title}</ListItemText>
+            <IconButton aria-label="delete" onClick={() => handleDelete(t.id)}>
+              <Toast
+                text="This task has been removed!"
+                handleCloseToast={handleCloseToast}
+                openToast={openToast}
+                setOpenToast={setOpenToast}
+              />
 
-            <DeleteIcon />
-          </IconButton>
-          <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
-            <EditIcon />
-          </IconButton>
-          <CustomModal
-            handleCloseModal={handleCloseModal}
-            openModal={openModal}
-            title={t.title}
-            handleChange={handleChange}
-            updateTask={updateTask}
-          />
-        </ListItem>
-      ))}
+              <DeleteIcon />
+            </IconButton>
+            <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
+              <EditIcon />
+            </IconButton>
+            {/* <p>{t.done ? t.createdAt.toLocaleString() : 'in progress'}</p> */}
+            <p>{t.createdAt ? t.createdAt.toLocaleString() : 'in progress'}</p>
+            <CustomModal
+              handleCloseModal={handleCloseModal}
+              openModal={openModal}
+              title={t.title}
+              handleChange={handleChange}
+              updateTask={updateTask}
+            />
+          </ListItem>
+        ))}
     </List>
   );
 };

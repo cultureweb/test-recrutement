@@ -25,6 +25,7 @@ const Tasks = () => {
       id: tasks.length,
       title: task,
       done: false,
+      createdAt: null,
     };
 
     setTasks((prevState) => [...prevState, newTask]);
