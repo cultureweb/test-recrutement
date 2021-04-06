@@ -11,4 +11,14 @@ export default class Api {
       },
     }).then((res) => res.json());
   }
+  static generateRandomTask() {
+    return fetch(`${urlApi}/v1/tasks/random-task-generator`, {
+      mode: "cors",
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
+  }
 }

@@ -14,15 +14,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Tasks = ({ datas }) => {
   const classes = useStyles();
-  //console.log({ datas.datas });
+
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    // if (datas.length) {
     setTasks(datas);
-    // }
-  }, []);
+  }, [datas]);
 
   const addTask = (e) => {
     e.preventDefault();
@@ -41,7 +39,7 @@ const Tasks = ({ datas }) => {
     <>
       <h2>To do:</h2>
       <ListOfTasks
-        tasks={tasks.length ? tasks.filter((item) => !item.done) : ""}
+        tasks={tasks && tasks.length ? tasks.filter((item) => !item.done) : ""}
         setTasks={setTasks}
         setTask={setTask}
       />
