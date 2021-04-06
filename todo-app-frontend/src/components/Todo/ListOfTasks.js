@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { IconButton, List, ListItem, ListItemText } from '@material-ui/core';
-import Checkbox from '@material-ui/core/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Toast from '../UI/Toast';
-import CustomModal from '../UI/CustomModal';
-import EditIcon from '@material-ui/icons/Edit';
+import React, { useState } from "react";
+import { IconButton, List, ListItem, ListItemText } from "@material-ui/core";
+import Checkbox from "@material-ui/core/Checkbox";
+import { makeStyles } from "@material-ui/core/styles";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Toast from "../UI/Toast";
+import CustomModal from "../UI/CustomModal";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
@@ -44,7 +44,7 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
   };
 
   const handleCloseToast = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -81,41 +81,44 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
 
   return (
     <List className={classes.root}>
-      {tasks
-        .sort((a, b) => new Date(b.doneAt) - new Date(a.doneAt))
-        .map((t, index) => (
-          <ListItem key={index} role={undefined} dense>
-            <Checkbox
-              edge="start"
-              checked={t.done}
-              // checked={checked}
-              onChange={(event) => handleCheck(event, t.id)}
-            />
-            <ListItemText>{t.title}</ListItemText>
-            <IconButton aria-label="delete" onClick={() => handleDelete(t.id)}>
-              <Toast
-                text="This task has been removed!"
-                handleCloseToast={handleCloseToast}
-                openToast={openToast}
-                setOpenToast={setOpenToast}
+      {tasks.length &&
+        tasks
+          .sort((a, b) => new Date(b.doneAt) - new Date(a.doneAt))
+          .map((t, index) => (
+            <ListItem key={index} role={undefined} dense>
+              <Checkbox
+                edge="start"
+                checked={t.done}
+                onChange={(event) => handleCheck(event, t.id)}
               />
+              <ListItemText>{t.title}</ListItemText>
+              <IconButton
+                aria-label="delete"
+                onClick={() => handleDelete(t.id)}
+              >
+                <Toast
+                  text="This task has been removed!"
+                  handleCloseToast={handleCloseToast}
+                  openToast={openToast}
+                  setOpenToast={setOpenToast}
+                />
 
-              <DeleteIcon />
-            </IconButton>
-            <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
-              <EditIcon />
-            </IconButton>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
+                <EditIcon />
+              </IconButton>
 
-            <p>{t.doneAt ? t.doneAt.toLocaleString() : ''}</p>
-            <CustomModal
-              handleCloseModal={handleCloseModal}
-              openModal={openModal}
-              title={t.title}
-              handleChange={handleChange}
-              updateTask={updateTask}
-            />
-          </ListItem>
-        ))}
+              <p>{t.doneAt ? t.doneAt.toLocaleString() : ""}</p>
+              <CustomModal
+                handleCloseModal={handleCloseModal}
+                openModal={openModal}
+                title={t.title}
+                handleChange={handleChange}
+                updateTask={updateTask}
+              />
+            </ListItem>
+          ))}
     </List>
   );
 };

@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import ListOfTasks from './ListOfTasks';
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import ListOfTasks from "./ListOfTasks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& > *': {
+    "& > *": {
       margin: theme.spacing(1),
-      width: '25ch',
+      width: "25ch",
     },
   },
 }));
 
-const Tasks = () => {
+const Tasks = ({ datas }) => {
   const classes = useStyles();
-
-  const [task, setTask] = useState('');
+  //console.log({ datas.datas });
+  const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    // if (datas.length) {
+    setTasks(datas);
+    // }
+  }, []);
 
   const addTask = (e) => {
     e.preventDefault();
@@ -29,19 +35,19 @@ const Tasks = () => {
     };
 
     setTasks((prevState) => [...prevState, newTask]);
-    setTask('');
+    setTask("");
   };
   return (
     <>
       <h2>To do:</h2>
       <ListOfTasks
-        tasks={tasks.filter((item) => !item.done)}
+        tasks={tasks.length ? tasks.filter((item) => !item.done) : ""}
         setTasks={setTasks}
         setTask={setTask}
       />
       <h2>Done:</h2>
       <ListOfTasks
-        tasks={tasks.filter((item) => item.done)}
+        tasks={tasks.length ? tasks.filter((item) => item.done) : ""}
         setTasks={setTasks}
         setTask={setTask}
       />

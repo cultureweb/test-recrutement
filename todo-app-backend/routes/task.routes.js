@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const task = require('../models/task.model');
-const m = require('../helpers/middlewares');
+const task = require("../models/task.model");
+const m = require("../helpers/middlewares");
 // Routes
 /* All tasks */
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   await task
     .getTasks()
     .then((tasks) => res.json(tasks))
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
     });
 });
 /* Generate Radomly a new task */
-router.get('/random-task-generator', async (req, res) => {
+router.get("/random-task-generator", async (req, res) => {
   await task
     .generateTask()
     .then((task) =>
