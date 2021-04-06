@@ -31,7 +31,7 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
               id: obj.id,
               title: obj.title,
               done: !obj.done,
-              createdAt: event.target.checked ? new Date() : null,
+              doneAt: event.target.checked ? new Date() : null,
             }
           : obj
       )
@@ -68,7 +68,7 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
               id: obj.id,
               title: e.target.value,
               done: obj.done,
-              createdAt: obj.createdAt,
+              doneAt: obj.doneAt,
             }
           : obj
       )
@@ -82,7 +82,7 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
   return (
     <List className={classes.root}>
       {tasks
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .sort((a, b) => new Date(b.doneAt) - new Date(a.doneAt))
         .map((t, index) => (
           <ListItem key={index} role={undefined} dense>
             <Checkbox
@@ -105,8 +105,8 @@ const ListOfTasks = ({ tasks, setTasks, setTask }) => {
             <IconButton aria-label="edit" onClick={() => handleOpenModal()}>
               <EditIcon />
             </IconButton>
-            {/* <p>{t.done ? t.createdAt.toLocaleString() : 'in progress'}</p> */}
-            <p>{t.createdAt ? t.createdAt.toLocaleString() : 'in progress'}</p>
+
+            <p>{t.doneAt ? t.doneAt.toLocaleString() : ''}</p>
             <CustomModal
               handleCloseModal={handleCloseModal}
               openModal={openModal}
