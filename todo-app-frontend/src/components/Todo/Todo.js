@@ -6,6 +6,7 @@ import { useAsync } from "react-use";
 import ReactLoading from "react-loading";
 import { toast } from "react-toastify";
 import Api from "./Api";
+import BackToTop from "../Footer/BackToTop";
 
 const Todo = () => {
   const { loading, value, error } = useAsync(async () => {
@@ -37,8 +38,9 @@ const Todo = () => {
 
   return (
     <div>
-      <Menu handleClick={generateTask} />
+      <Menu id="top" handleClick={generateTask} />
       <Tasks datas={value.datas ? value.datas : []} />
+      <BackToTop />
     </div>
   );
 };
